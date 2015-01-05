@@ -1,6 +1,7 @@
 require 'gosu'
 require_relative 'player'
 require_relative 'particle'
+require_relative 'fpscounter'
 
 class GameWindow < Gosu::Window
 	def initialize
@@ -13,6 +14,8 @@ class GameWindow < Gosu::Window
 
 		@particles = Array.new()
 		@particle_img = Gosu::Image.new(self, "circle_icon.png", false)
+		@fpsCounter = FPSCounter.new(self)
+		#@particle_img = Gosu::Image.new(self, "cage.jpg", false)
 		
 
 	end
@@ -43,6 +46,8 @@ class GameWindow < Gosu::Window
 			p.update
 		end
 
+		@fpsCounter.update
+
 
 	end
 
@@ -58,6 +63,7 @@ class GameWindow < Gosu::Window
 		@particles.each do |p|
 			p.draw
 		end
+		@fpsCounter.draw
 
 	end
 end

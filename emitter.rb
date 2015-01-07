@@ -1,17 +1,22 @@
 
 
 class Emitter
+
+	attr_accessor :particleCount
+
 	def initialize(window, x, y, img)
-		@totalParticles = 50
+		@totalParticles = 30
 		@pool = Array.new()
 		@img = img
 		@x = x
 		@y = y
 		
 		@particleCount = 0
-		@emissionRate = 1
+		@emissionRate = 0
 		@cooldown = @emissionRate
 		@color = Gosu::Color.new(0xFF000000)
+
+		@frames = 0
 		
 
 		restartPool()
@@ -19,43 +24,43 @@ class Emitter
 
 	#update all living particles
 	def update
-		#puts @particleCount
-		if (@particleCount < @totalParticles)
+		@cooldown -= 1
+		while (@particleCount < @totalParticles && @cooldown <= 0)
 			addParticle()
+			@cooldown = @emissionRate
 		end
-		temp = @pool[0]
-		for x in 0..(@particleCount-1) 
-			if (@pool[x].alive? == false)
+		i = 0
+		while (i <= (@particleCount-1))
+			if (@pool[i].alive? == false)
 				#swap dead particles to the end of active particles
-				temp = @pool[x]
-				@pool[x] = @pool[@particleCount-1]
-				@pool[@particleCount-1] = temp
+				@pool[i], @pool[@particleCount-1] = @pool[@particleCount-1], @pool[i]
 				@particleCount -= 1
 			end
-			@pool[x].update
+			@pool[i].update
+			i += 1
 		end
 	end
+
 
 	#reset the entire pool
 	def restartPool
 		@pool = Array.new(@totalParticles)
 		for x in 0..(@totalParticles-1)
-			#puts "poney"
-			#puts Particle.new(@x, @y)
 			@pool[x] = Particle.new(@x, @y)
-			#puts @pool[0]
 		end
 	end
+
 
 	#reinitialize one of the dead particles
 	def addParticle
 		if (@particleCount == @totalParticles)
 			return false
+		else
+			initParticle(@pool[@particleCount])
+			@particleCount += 1
 		end
-		p = @pool[@particleCount]
-		initParticle(p)
-		@particleCount += 1
 	end
+
 
 	#set the particles initial value
 	def initParticle(p)
@@ -64,10 +69,12 @@ class Emitter
 		angle = Random.rand(360)
 		@vel_x = speed * Math.cos(angle * Math::PI / 180)
 		@vel_y = speed * Math.sin(angle * Math::PI / 180)
+		#@vel_x = 8
+		#@vel_y = 0
 		@color.red = rand(255)
 		@color.blue = rand(255)
 		@color.green = rand(255)
-		p.life = 200
+		p.life = 60
 		p.x = @x
 		p.y = @y
 		p.vel_x = @vel_x
@@ -76,6 +83,7 @@ class Emitter
 		p.img = @img
 		p.color = @color.dup
 	end
+
 
 	#draw the particles
 	def draw

@@ -34,7 +34,7 @@ class Particle
 		@y = y
 		@vel_x = 0
 		@vel_y = 0
-		@life = 200
+		@life = 5
 	end
 
 	def update
@@ -44,19 +44,19 @@ class Particle
 		#@color.value -= 1
 		#@color.value -= 1
 		#@color.hue -= 5
-		@color.alpha -= 1
+		#@color.alpha -= 1
 		#if @color.alpha == 0 then 
 		#	@color.alpha = 255
 		#end
 	end
 
 	def draw
-		#@img.draw(@x, @y, 1, 1, 1, @color, mode = :additive)
-		@img.draw(@x, @y, 1, 1, 1, @color)
+		@img.draw(@x, @y, 1, 0.3, 0.3, @color, mode = :additive)
+		#@img.draw(@x, @y, 1, 0.1, 0.1, @color)
 	end
 
 	def alive?
-		if @life > 0
+		if @life >= 0
 			return true
 		end
 		return false

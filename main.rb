@@ -15,9 +15,12 @@ class GameWindow < Gosu::Window
 
 		@particles = Array.new()
 		#@particle_img = Gosu::Image.new(self, "circle_icon.png", false)
+		#@particle_img = Gosu::Image.new(self, "verySmallCircle.png", false)
 		@particle_img = Gosu::Image.new(self, "smallCircle.png", false)
 		@fpsCounter = FPSCounter.new(self)
 		@emitters = Array.new()
+		@font = Gosu::Font.new(self, Gosu::default_font_name, 20)
+		@totalParticles = 0
 		#@particle_img = Gosu::Image.new(self, "cage.jpg", false)
 		
 
@@ -33,7 +36,10 @@ class GameWindow < Gosu::Window
 		#	create_splosion(mouse_x, mouse_y)
 		end
 		if button_down? Gosu::MsRight then
-			createEmitter(mouse_x, mouse_y)
+			#createEmitter(mouse_x, mouse_y)
+			@x = mouse_x
+			@y = mouse_y
+			createEmitter(@x, @y)
 		end
 		if button_down? Gosu::KbLeft then
 			@player.move("left")
@@ -47,18 +53,22 @@ class GameWindow < Gosu::Window
 		if button_down? Gosu::KbDown then
 			@player.move("down")
 		end
+		if button_down? Gosu::KbSpace then
+			@emitters.clear()
+		end
 
 		@particles.each do |p|
 			p.update
 		end
 
+		@totalParticles = 0
 		@emitters.each do |e|
 			e.update
+			@totalParticles += e.particleCount
 		end
 
+
 		@fpsCounter.update
-
-
 	end
 
 	def create_splosion(x, y)
@@ -81,6 +91,7 @@ class GameWindow < Gosu::Window
 			e.draw
 		end
 		@fpsCounter.draw
+		@font.draw("Total Particles: " + @totalParticles.to_s, 0, 30, 20)
 
 	end
 end

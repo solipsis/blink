@@ -1,8 +1,12 @@
 require 'gosu'
+#require 'fidget'
 require_relative 'player'
 require_relative 'particle'
 require_relative 'fpscounter'
 require_relative 'emitter'
+
+
+Struct.new("Attribute", :name, :value, :min, :max)
 
 class GameWindow < Gosu::Window
 	def initialize
@@ -23,7 +27,7 @@ class GameWindow < Gosu::Window
 		@totalParticles = 0
 		#@particle_img = Gosu::Image.new(self, "cage.jpg", false)
 		
-
+		initEmitterAttributes()
 	end
 
 	def needs_cursor?
@@ -36,10 +40,7 @@ class GameWindow < Gosu::Window
 		#	create_splosion(mouse_x, mouse_y)
 		end
 		if button_down? Gosu::MsRight then
-			#createEmitter(mouse_x, mouse_y)
-			@x = mouse_x
-			@y = mouse_y
-			createEmitter(@x, @y)
+			createEmitter(mouse_x, mouse_y, @emitterAttributes)
 		end
 		if button_down? Gosu::KbLeft then
 			@player.move("left")
@@ -77,9 +78,25 @@ class GameWindow < Gosu::Window
 		end
 	end
 
-	def createEmitter(x, y)
-		@emitters.push(Emitter.new(self, x, y, @particle_img))
+	def createEmitter(x, y, emitterAttributes)
+		@emitters.push(Emitter.new(x, y, @particle_img) do
+				self.speed = emitterAttributes["speed"].value
+				self.totalParticles = emitterAttributes["totalParticles"].value
+				self.red = emitterAttributes["red"].value
+				self.blue = emitterAttributes["blue"].value
+				self.green = emitterAttributes["green"].value
+				self.redVariance = emitterAttributes["red_var"].value
+				self.blueVariance = emitterAttributes["blue_var"].value
+				self.greenVariance = emitterAttributes["green_var"].value
+				self.life = emitterAttributes["life"].value
+				self.lifeVariance = emitterAttributes["life_var"].value
+				self.angle = emitterAttributes["angle"].value
+				self.angleVariance = emitterAttributes["angle_var"].value
+				self.emissionRate = emitterAttributes["rate"].value
+			end
+		)
 	end
+
 
 	def draw
 		@player.draw
@@ -93,6 +110,27 @@ class GameWindow < Gosu::Window
 		@fpsCounter.draw
 		@font.draw("Total Particles: " + @totalParticles.to_s, 0, 30, 20)
 
+	end
+
+
+	def initEmitterAttributes
+		@emitterAttributes = Hash.new()
+
+		@emitterAttributes["speed"] = Struct::Attribute.new("speed", 5, -1000, 1000)
+		puts @emitterAttributes["speed"]
+		@emitterAttributes["totalParticles"] = Struct::Attribute.new("Total Particles", 50, 0, 1000)
+		@emitterAttributes["red"] = Struct::Attribute.new("red", 150, 0, 255)
+		@emitterAttributes["blue"] = Struct::Attribute.new("blue", 150, 0, 255)
+		@emitterAttributes["green"] = Struct::Attribute.new("green", 150, 0, 255)
+		@emitterAttributes["red_var"] = Struct::Attribute.new("red variance", 100, 0, 255)
+		@emitterAttributes["green_var"] = Struct::Attribute.new("green variance", 100, 0, 255)
+		@emitterAttributes["blue_var"] = Struct::Attribute.new("blue variance", 100, 0, 255)
+		@emitterAttributes["life"] = Struct::Attribute.new("life", 100, 1, 2000)
+		@emitterAttributes["life_var"] = Struct::Attribute.new("life variance", 0, 0, 1000)
+		@emitterAttributes["angle"] = Struct::Attribute.new("angle", 0, 0, 360)
+		@emitterAttributes["angle_var"] = Struct::Attribute.new("angle variance", 360, 0, 360)
+		@emitterAttributes["rate"] = Struct::Attribute.new("emission rate", 0, 0, 1000)
+		@emitterAttributes["scale"] = Struct::Attribute.new("scale", 1, 0.1, 10.0)
 	end
 end
 
@@ -114,6 +152,8 @@ class MouseCursor
 		#@img.draw(x - 10,y - 10, 1)
 	end
 end
+
+
 
 window = GameWindow.new
 window.show

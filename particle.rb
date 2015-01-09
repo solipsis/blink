@@ -10,6 +10,7 @@ class Particle
 	attr_accessor :vel_x
 	attr_accessor :vel_y
 	attr_accessor :life
+	attr_accessor :additive
 
 	#def initialize(x, y, *angle, *speed, *img)
 	#	@x = x
@@ -30,6 +31,7 @@ class Particle
 
 
 	def initialize(x, y)
+		@additive = false
 		@x = x
 		@y = y
 		@vel_x = 0
@@ -48,11 +50,17 @@ class Particle
 		#if @color.alpha == 0 then 
 		#	@color.alpha = 255
 		#end
+		#@color.green = 5000
+		#@color.red = 5000
+		#@color.blue = 0
 	end
 
 	def draw
-		@img.draw(@x, @y, 1, 0.3, 0.3, @color, mode = :additive)
-		#@img.draw(@x, @y, 1, 0.1, 0.1, @color)
+		if @additive then
+			@img.draw(@x, @y, 1, 0.7, 0.7, @color, mode = :additive)
+		else
+			@img.draw(@x, @y, 1, 0.7, 0.7, @color)
+		end
 	end
 
 	def alive?

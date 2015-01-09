@@ -1,5 +1,7 @@
 require 'gosu'
-#require 'fidget'
+require 'rubygems'
+#require 'fidgit'
+#require 'Chingu'
 require_relative 'player'
 require_relative 'particle'
 require_relative 'fpscounter'
@@ -9,10 +11,14 @@ require_relative 'emitter'
 Struct.new("Attribute", :name, :value, :min, :max)
 
 class GameWindow < Gosu::Window
+#class GameWindow < Chingu::Window
 	def initialize
 		super 1280, 800, false
 		self.caption = "blink"
 
+
+		#@selectedKey = "speed"
+		@selectedKeyIndex = 0
 		@player = Player.new(self)
 		@player.blink(500,500)
 		@mouse = MouseCursor.new(self)
@@ -28,6 +34,7 @@ class GameWindow < Gosu::Window
 		#@particle_img = Gosu::Image.new(self, "cage.jpg", false)
 		
 		initEmitterAttributes()
+		
 	end
 
 	def needs_cursor?
@@ -37,23 +44,45 @@ class GameWindow < Gosu::Window
 	def update
 		if button_down? Gosu::MsLeft then
 			@player.blink(mouse_x, mouse_y)
-		#	create_splosion(mouse_x, mouse_y)
+			#create_splosion(mouse_x, mouse_y)
 		end
 		if button_down? Gosu::MsRight then
 			createEmitter(mouse_x, mouse_y, @emitterAttributes)
 		end
 		if button_down? Gosu::KbLeft then
 			@player.move("left")
+			decrementAttribute()
 		end
 		if button_down? Gosu::KbRight then
 			@player.move("right")
+			incrementAttribute()
 		end
 		if button_down? Gosu::KbUp then
 			@player.move("up")
+			
+			if @selectedKeyIndex > 0
+				@selectedKeyIndex -= 1
+			end
 		end
 		if button_down? Gosu::KbDown then
 			@player.move("down")
+			
+			if @selectedKeyIndex < (@emitterAttributes.keys.size-1)
+				@selectedKeyIndex += 1
+			end
 		end
+		if button_down? Gosu::MsWheelDown then
+			if @selectedKeyIndex < (@emitterAttributes.keys.size-1)
+				@selectedKeyIndex += 1
+			end
+		end
+		if button_down?(Gosu::MsWheelUp)
+			if @selectedKeyIndex > 0
+				@selectedKeyIndex -= 1
+			end
+		end
+
+
 		if button_down? Gosu::KbSpace then
 			@emitters.clear()
 		end
@@ -71,6 +100,38 @@ class GameWindow < Gosu::Window
 
 		@fpsCounter.update
 	end
+
+	def button_down(id)
+		case id
+		when Gosu::MsWheelUp
+			if @selectedKeyIndex > 0
+				@selectedKeyIndex -= 1
+			end	
+		when Gosu::MsWheelDown
+			if @selectedKeyIndex < (@emitterAttributes.keys.size-1)
+				@selectedKeyIndex += 1
+			end
+		end
+	end
+
+
+
+	def incrementAttribute()
+		attribute = @emitterAttributes[@emitterAttributes.keys[@selectedKeyIndex]]
+		attribute.value += attribute.max / 500
+		if attribute.value > attribute.max
+			attribute.value = attribute.max 
+		end
+	end
+
+	def decrementAttribute()
+		attribute = @emitterAttributes[@emitterAttributes.keys[@selectedKeyIndex]]
+		attribute.value -= attribute.max / 500
+		if attribute.value < attribute.min
+			attribute.value = attribute.min 
+		end
+	end
+
 
 	def create_splosion(x, y)
 		5.times do 
@@ -93,6 +154,7 @@ class GameWindow < Gosu::Window
 				self.angle = emitterAttributes["angle"].value
 				self.angleVariance = emitterAttributes["angle_var"].value
 				self.emissionRate = emitterAttributes["rate"].value
+				self.scale = emitterAttributes["scale"].value
 			end
 		)
 	end
@@ -109,15 +171,29 @@ class GameWindow < Gosu::Window
 		end
 		@fpsCounter.draw
 		@font.draw("Total Particles: " + @totalParticles.to_s, 0, 30, 20)
-
+		drawAttributes() 
 	end
 
+
+	def drawAttributes
+		y = 55
+	
+		index = 0
+		for key in @emitterAttributes.keys
+			if (index == @selectedKeyIndex)
+				@font.draw("***" + @emitterAttributes[key].name.to_s + "***: " + @emitterAttributes[key].value.to_s, 0, y, 10)
+			else
+				@font.draw(@emitterAttributes[key].name.to_s + ": " + @emitterAttributes[key].value.to_s, 0, y, 10)
+			end
+			y += 20
+			index += 1
+		end
+	end
 
 	def initEmitterAttributes
 		@emitterAttributes = Hash.new()
 
-		@emitterAttributes["speed"] = Struct::Attribute.new("speed", 5, -1000, 1000)
-		puts @emitterAttributes["speed"]
+		@emitterAttributes["speed"] = Struct::Attribute.new("speed", 5, 0, 1000)
 		@emitterAttributes["totalParticles"] = Struct::Attribute.new("Total Particles", 50, 0, 1000)
 		@emitterAttributes["red"] = Struct::Attribute.new("red", 150, 0, 255)
 		@emitterAttributes["blue"] = Struct::Attribute.new("blue", 150, 0, 255)
@@ -133,6 +209,11 @@ class GameWindow < Gosu::Window
 		@emitterAttributes["scale"] = Struct::Attribute.new("scale", 1, 0.1, 10.0)
 	end
 end
+
+#-------------------------------------------------------------------------------------------
+
+
+#-------------------------------------------------------------------------------------------
 
 class MouseCursor
 	def initialize(window)
@@ -155,5 +236,6 @@ end
 
 
 
-window = GameWindow.new
-window.show
+#window = GameWindow.new
+#window.show
+GameWindow.new.show

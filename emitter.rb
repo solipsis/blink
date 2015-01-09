@@ -112,14 +112,14 @@ class Emitter
 		@color.red = @red + rand(-@redVariance..@redVariance)
 		@color.blue = @blue + rand(-@blueVariance..@blueVariance)
 		@color.green = @green + rand(-@greenVariance..@greenVariance)
-		p.life = @life
+		p.life = @life + rand(-@lifeVariance..@lifeVariance)
 		p.x = @x
 		p.y = @y
 		p.vel_x = @vel_x
 		p.vel_y = @vel_y
-		p.speed = 5
 		p.img = @img
 		p.color = @color.dup
+		p.scale = @scale
 		p.additive = true
 	end
 

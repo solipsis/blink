@@ -11,6 +11,7 @@ class Particle
 	attr_accessor :vel_y
 	attr_accessor :life
 	attr_accessor :additive
+	attr_accessor :scale
 
 	#def initialize(x, y, *angle, *speed, *img)
 	#	@x = x
@@ -57,9 +58,9 @@ class Particle
 
 	def draw
 		if @additive then
-			@img.draw(@x, @y, 1, 0.7, 0.7, @color, mode = :additive)
+			@img.draw(@x, @y, 1, @scale, @scale, @color, mode = :additive)
 		else
-			@img.draw(@x, @y, 1, 0.7, 0.7, @color)
+			@img.draw(@x, @y, 1, @scale, @scale, @color)
 		end
 	end
 

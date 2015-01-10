@@ -7,7 +7,7 @@ class Emitter
 	attr_accessor :speed, :totalParticles, :red, :green, :blue
 	attr_accessor :redVariance, :blueVariance, :greenVariance, :life
 	attr_accessor :lifeVariance, :angle, :angleVariance, :emissionRate, :scale
-
+	attr_accessor :additive
 
 	def initialize(x, y, img, &block)
 
@@ -109,10 +109,12 @@ class Emitter
 		@vel_y = @speed * Math.sin(angle * Math::PI / 180)
 		#@vel_x = 8
 		#@vel_y = 0
+
 		@color.red = @red + rand(-@redVariance..@redVariance)
 		@color.blue = @blue + rand(-@blueVariance..@blueVariance)
 		@color.green = @green + rand(-@greenVariance..@greenVariance)
 		p.life = @life + rand(-@lifeVariance..@lifeVariance)
+		p.additive = @additive
 		p.x = @x
 		p.y = @y
 		p.vel_x = @vel_x
@@ -120,7 +122,7 @@ class Emitter
 		p.img = @img
 		p.color = @color.dup
 		p.scale = @scale
-		p.additive = true
+		#p.additive = true
 	end
 
 

@@ -31,6 +31,7 @@ class GameWindow < Gosu::Window
 		@emitters = Array.new()
 		@font = Gosu::Font.new(self, Gosu::default_font_name, 20)
 		@totalParticles = 0
+		@additive = true
 		#@particle_img = Gosu::Image.new(self, "cage.jpg", false)
 		
 		initEmitterAttributes()
@@ -114,11 +115,23 @@ class GameWindow < Gosu::Window
 		end
 	end
 
+	def button_up(id)
+		case id
+		when Gosu::MsLeft
+			if @additive == false 
+				@additive = true
+			else @additive == true
+				@additive = false
+			end
+		end
+	end
+
 
 
 	def incrementAttribute()
 		attribute = @emitterAttributes[@emitterAttributes.keys[@selectedKeyIndex]]
-		attribute.value += attribute.max / 500
+		#attribute.value += attribute.max / 500
+		
 		if attribute.value > attribute.max
 			attribute.value = attribute.max 
 		end
@@ -140,6 +153,7 @@ class GameWindow < Gosu::Window
 	end
 
 	def createEmitter(x, y, emitterAttributes)
+		additive = @additive
 		@emitters.push(Emitter.new(x, y, @particle_img) do
 				self.speed = emitterAttributes["speed"].value
 				self.totalParticles = emitterAttributes["totalParticles"].value
@@ -155,8 +169,10 @@ class GameWindow < Gosu::Window
 				self.angleVariance = emitterAttributes["angle_var"].value
 				self.emissionRate = emitterAttributes["rate"].value
 				self.scale = emitterAttributes["scale"].value
+				self.additive = additive
 			end
 		)
+		#puts @additive
 	end
 
 
@@ -188,12 +204,17 @@ class GameWindow < Gosu::Window
 			y += 20
 			index += 1
 		end
-	end
+		@font.draw("additive rendering: " + @additive.to_s, 0, y, 10)
+		@font.draw("use mouse wheel to select attributes to change. use left and right arrow keys to change the values. Use space to clear the view", 0, 700, 10)
+		@font.draw("hold right click to place particle emitters with the chosen attributes. Press left click to toggle additive rendering", 0, 720, 10)
+		@font.draw("more features soon and a better gui", 0, 740, 10)
+
+	end	
 
 	def initEmitterAttributes
 		@emitterAttributes = Hash.new()
 
-		@emitterAttributes["speed"] = Struct::Attribute.new("speed", 5, 0, 1000)
+		@emitterAttributes["speed"] = Struct::Attribute.new("speed", 5, 0, 100)
 		@emitterAttributes["totalParticles"] = Struct::Attribute.new("Total Particles", 50, 0, 1000)
 		@emitterAttributes["red"] = Struct::Attribute.new("red", 150, 0, 255)
 		@emitterAttributes["blue"] = Struct::Attribute.new("blue", 150, 0, 255)
@@ -205,7 +226,7 @@ class GameWindow < Gosu::Window
 		@emitterAttributes["life_var"] = Struct::Attribute.new("life variance", 0, 0, 1000)
 		@emitterAttributes["angle"] = Struct::Attribute.new("angle", 0, 0, 360)
 		@emitterAttributes["angle_var"] = Struct::Attribute.new("angle variance", 360, 0, 360)
-		@emitterAttributes["rate"] = Struct::Attribute.new("emission rate", 0, 0, 1000)
+		@emitterAttributes["rate"] = Struct::Attribute.new("emission rate", 0, 0, 20)
 		@emitterAttributes["scale"] = Struct::Attribute.new("scale", 1, 0.1, 10.0)
 	end
 end

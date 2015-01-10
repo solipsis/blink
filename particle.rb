@@ -32,7 +32,7 @@ class Particle
 
 
 	def initialize(x, y)
-		@additive = false
+		#@additive = false
 		@x = x
 		@y = y
 		@vel_x = 0
@@ -57,7 +57,8 @@ class Particle
 	end
 
 	def draw
-		if @additive then
+		#puts @additive
+		if @additive == true then
 			@img.draw(@x, @y, 1, @scale, @scale, @color, mode = :additive)
 		else
 			@img.draw(@x, @y, 1, @scale, @scale, @color)

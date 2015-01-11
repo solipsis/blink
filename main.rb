@@ -26,12 +26,13 @@ class GameWindow < Gosu::Window
 		@particles = Array.new()
 		#@particle_img = Gosu::Image.new(self, "circle_icon.png", false)
 		#@particle_img = Gosu::Image.new(self, "verySmallCircle.png", false)
-		@particle_img = Gosu::Image.new(self, "smallCircle.png", false)
+		@particle_img = Gosu::Image.new(self, "verySmallCircle.png", false)
 		@fpsCounter = FPSCounter.new(self)
 		@emitters = Array.new()
 		@font = Gosu::Font.new(self, Gosu::default_font_name, 20)
 		@totalParticles = 0
 		@additive = true
+		@alphaDecayRate = 2
 		#@particle_img = Gosu::Image.new(self, "cage.jpg", false)
 		
 		initEmitterAttributes()
@@ -131,7 +132,7 @@ class GameWindow < Gosu::Window
 	def incrementAttribute()
 		attribute = @emitterAttributes[@emitterAttributes.keys[@selectedKeyIndex]]
 		#attribute.value += attribute.max / 500
-		
+		attribute.value += 1
 		if attribute.value > attribute.max
 			attribute.value = attribute.max 
 		end
@@ -139,7 +140,8 @@ class GameWindow < Gosu::Window
 
 	def decrementAttribute()
 		attribute = @emitterAttributes[@emitterAttributes.keys[@selectedKeyIndex]]
-		attribute.value -= attribute.max / 500
+		# attribute.value -= attribute.max / 500
+		attribute.value -= 1
 		if attribute.value < attribute.min
 			attribute.value = attribute.min 
 		end
@@ -169,6 +171,10 @@ class GameWindow < Gosu::Window
 				self.angleVariance = emitterAttributes["angle_var"].value
 				self.emissionRate = emitterAttributes["rate"].value
 				self.scale = emitterAttributes["scale"].value
+				# puts "potato"
+				# puts emitterAttributes["alpha_decay_rate"].value
+				self.alphaDecayRate = emitterAttributes["alpha_decay_rate"].value
+
 				self.additive = additive
 			end
 		)
@@ -228,6 +234,7 @@ class GameWindow < Gosu::Window
 		@emitterAttributes["angle_var"] = Struct::Attribute.new("angle variance", 360, 0, 360)
 		@emitterAttributes["rate"] = Struct::Attribute.new("emission rate", 0, 0, 20)
 		@emitterAttributes["scale"] = Struct::Attribute.new("scale", 1, 0.1, 10.0)
+		@emitterAttributes["alpha_decay_rate"] = Struct::Attribute.new("Alpha decay rate", 2, 0, 60)
 	end
 end
 

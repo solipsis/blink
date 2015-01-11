@@ -12,6 +12,7 @@ class Particle
 	attr_accessor :life
 	attr_accessor :additive
 	attr_accessor :scale
+	attr_accessor :alphaDecayRate
 
 	#def initialize(x, y, *angle, *speed, *img)
 	#	@x = x
@@ -47,7 +48,7 @@ class Particle
 		#@color.value -= 1
 		#@color.value -= 1
 		#@color.hue -= 5
-		#@color.alpha -= 1
+		@color.alpha -= @alphaDecayRate
 		#if @color.alpha == 0 then 
 		#	@color.alpha = 255
 		#end

@@ -8,6 +8,7 @@ class Emitter
 	attr_accessor :redVariance, :blueVariance, :greenVariance, :life
 	attr_accessor :lifeVariance, :angle, :angleVariance, :emissionRate, :scale
 	attr_accessor :additive
+	attr_accessor :alphaDecayRate
 
 	def initialize(x, y, img, &block)
 
@@ -38,6 +39,7 @@ class Emitter
 		@angleVariance = 360
 		@emissionRate = 0
 		@scale = 1
+		@alphaDecayRate
 
 
 		#@totalParticles = 30
@@ -122,6 +124,7 @@ class Emitter
 		p.img = @img
 		p.color = @color.dup
 		p.scale = @scale
+		p.alphaDecayRate = @alphaDecayRate
 		#p.additive = true
 	end
 

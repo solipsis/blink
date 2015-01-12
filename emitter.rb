@@ -11,20 +11,7 @@ class Emitter
 	attr_accessor :alphaDecayRate
 
 	def initialize(x, y, img, &block)
-
-		#initAttributes()
-		#@EmitterAttributes["speed"] = Struct::Attribute.new("speed", 5, -1000, 1000)
-		#@EmitterAttributes["totalParticles"] = Struct::Attribute.new("Total Particles", 50, 0, 1000)
-		#@EmitterAttributes["red"] = Struct::Attribute.new("red", 150, 0, 255)
-		#@EmitterAttributes["blue"] = Struct::Attribute.new("blue", 150, 0, 255)
-		#@EmitterAttributes["green"] = Struct::Attribute.new("green", 150, 0, 255)
-		#@EmitterAttributes["red_var"] = Struct::Attribute.new("red variance", 100, 0, 255)
-		#@EmitterAttributes["green_var"] = Struct::Attribute.new("green variance", 100, 0, 255)
-		#@EmitterAttributes["blue_var"] = Struct::Attribute.new("blue variance", 100, 0, 255)
-		#@EmitterAttributes["life"] = Struct::Attribute.new("life", 100, 1, 2000)
-		#@EmitterAttributes["life_var"] = Struct::Attribute.new("life variance", 0, 0, 1000)
-		#@EmitterAttributes["angle"] = Struct::Attribute.new("angle", 0, 0, 360)
-		#@EmitterAttributes["angle_var"] = Struct::Attribute.new("angle variance", 0, 0, 360)
+		#default settings
 		@speed = 5
 		@totalParticles = 50
 		@red = 150
@@ -39,14 +26,17 @@ class Emitter
 		@angleVariance = 360
 		@emissionRate = 0
 		@scale = 1
-		@alphaDecayRate
+		@alphaDecayRate = 2
+		@hueChangeRate = 0
 
 
-		#@totalParticles = 30
+
 		@pool = Array.new()
 		@img = img
 		@x = x
 		@y = y
+
+		@test = 2
 		
 		@particleCount = 0
 		@emissionRate = 0
@@ -104,13 +94,9 @@ class Emitter
 
 	#set the particles initial value
 	def initParticle(p)
-
-		#speed = 5
 		@angle = (@angle + rand(-@angleVariance..@angleVariance))
 		@vel_x = @speed * Math.cos(angle * Math::PI / 180)
 		@vel_y = @speed * Math.sin(angle * Math::PI / 180)
-		#@vel_x = 8
-		#@vel_y = 0
 
 		@color.red = @red + rand(-@redVariance..@redVariance)
 		@color.blue = @blue + rand(-@blueVariance..@blueVariance)
@@ -125,13 +111,6 @@ class Emitter
 		p.color = @color.dup
 		p.scale = @scale
 		p.alphaDecayRate = @alphaDecayRate
-		#p.additive = true
-	end
-
-
-	def initAttributes
-		
-
 	end
 
 	#draw the particles

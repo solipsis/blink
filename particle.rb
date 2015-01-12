@@ -13,52 +13,34 @@ class Particle
 	attr_accessor :additive
 	attr_accessor :scale
 	attr_accessor :alphaDecayRate
-
-	#def initialize(x, y, *angle, *speed, *img)
-	#	@x = x
-	#	@y = y
-#
-#		@img = img
-#		@color = Gosu::Color.new(0xff000000)
-#		@color.red = rand(256 - 40) + 40
-#	
-#		@color.green = rand(256 - 40) + 40
-#		@color.green = 0
-#		@color.blue = rand(256 - 40) + 40
-#		@color.blue = 0
-#		@color.hue = rand(360)
-#		@life = 255#
-
-	#end
+	attr_accessor :test
+	#attr_accessor :hueChangeRate
 
 
 	def initialize(x, y)
-		#@additive = false
 		@x = x
 		@y = y
 		@vel_x = 0
 		@vel_y = 0
 		@life = 5
+		@test = 0
+		#puts @test.inspect
 	end
 
 	def update
 		@x += @vel_x
 		@y += @vel_y
 		@life -= 1
-		#@color.value -= 1
-		#@color.value -= 1
-		#@color.hue -= 5
 		@color.alpha -= @alphaDecayRate
-		#if @color.alpha == 0 then 
-		#	@color.alpha = 255
-		#end
-		#@color.green = 5000
-		#@color.red = 5000
-		#@color.blue = 0
+		@test += 3
+		#@color.hue += 0
+		#@color.value = @color.value
+		#@color.hue = color.hue
+		# puts @color.hue
+		#puts @hueChangeRate
 	end
 
 	def draw
-		#puts @additive
 		if @additive == true then
 			@img.draw(@x, @y, 1, @scale, @scale, @color, mode = :additive)
 		else

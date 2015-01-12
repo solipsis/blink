@@ -6,7 +6,7 @@ require_relative 'player'
 require_relative 'particle'
 require_relative 'fpscounter'
 require_relative 'emitter'
-
+require_relative 'squareEmitter'
 
 Struct.new("Attribute", :name, :value, :min, :max)
 
@@ -156,7 +156,7 @@ class GameWindow < Gosu::Window
 
 	def createEmitter(x, y, emitterAttributes)
 		additive = @additive
-		@emitters.push(Emitter.new(x, y, @particle_img) do
+		@emitters.push(SquareEmitter.new(x, y, @particle_img) do
 				self.speed = emitterAttributes["speed"].value
 				self.totalParticles = emitterAttributes["totalParticles"].value
 				self.red = emitterAttributes["red"].value
@@ -171,10 +171,7 @@ class GameWindow < Gosu::Window
 				self.angleVariance = emitterAttributes["angle_var"].value
 				self.emissionRate = emitterAttributes["rate"].value
 				self.scale = emitterAttributes["scale"].value
-				# puts "potato"
-				# puts emitterAttributes["alpha_decay_rate"].value
 				self.alphaDecayRate = emitterAttributes["alpha_decay_rate"].value
-
 				self.additive = additive
 			end
 		)

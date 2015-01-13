@@ -1,0 +1,38 @@
+
+class CircleEmitter < Emitter
+	def initialize(x, y, img, &block)
+		super(x, y, img, &block)
+		@radius = 200
+	end
+
+	def initParticle(p)
+		@angle = (@angle + rand(-@angleVariance..@angleVariance))
+		@vel_x = @speed * Math.cos(angle * Math::PI / 180)
+		@vel_y = @speed * Math.sin(angle * Math::PI / 180)
+		
+		@color.red = @red + rand(-@redVariance..@redVariance)
+		@color.blue = @blue + rand(-@blueVariance..@blueVariance)
+		@color.green = @green + rand(-@greenVariance..@greenVariance)
+		p.life = @life + rand(-@lifeVariance..@lifeVariance)
+		p.additive = @additive
+
+		#random point in circle
+		t = 2*Math::PI*rand()
+		u = rand() + rand()
+		if u > 1 then
+			r = 2 - u
+		else
+			r = u
+		end
+
+		p.x = @x + r*(Math.cos(t))
+		p.y = @y + r*(Math.sin(t))
+		p.vel_x = @vel_x
+		p.vel_y = @vel_y
+		p.img = @img
+		p.color = @color.dup
+		p.scale = @scale
+		p.alphaDecayRate = @alphaDecayRate
+	end
+
+end

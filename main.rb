@@ -62,16 +62,16 @@ class GameWindow < Gosu::Window
 		if button_down? Gosu::KbUp then
 			@player.move("up")
 			
-			if @selectedKeyIndex > 0
-				@selectedKeyIndex -= 1
-			end
+			# if @selectedKeyIndex > 0
+			# 	@selectedKeyIndex -= 1
+			# end
 		end
 		if button_down? Gosu::KbDown then
 			@player.move("down")
 			
-			if @selectedKeyIndex < (@emitterAttributes.keys.size-1)
-				@selectedKeyIndex += 1
-			end
+			# if @selectedKeyIndex < (@emitterAttributes.keys.size-1)
+			# 	@selectedKeyIndex += 1
+			# end
 		end
 		if button_down? Gosu::MsWheelDown then
 			if @selectedKeyIndex < (@emitterAttributes.keys.size-1)
@@ -105,11 +105,19 @@ class GameWindow < Gosu::Window
 
 	def button_down(id)
 		case id
-		when Gosu::MsWheelUp
+		# when Gosu::MsWheelUp
+		# 	if @selectedKeyIndex > 0
+		# 		@selectedKeyIndex -= 1
+		# 	end	
+		# when Gosu::MsWheelDown
+		# 	if @selectedKeyIndex < (@emitterAttributes.keys.size-1)
+		# 		@selectedKeyIndex += 1
+		# 	end
+		when Gosu::KbUp
 			if @selectedKeyIndex > 0
 				@selectedKeyIndex -= 1
 			end	
-		when Gosu::MsWheelDown
+		when Gosu::KbDown
 			if @selectedKeyIndex < (@emitterAttributes.keys.size-1)
 				@selectedKeyIndex += 1
 			end
@@ -125,6 +133,8 @@ class GameWindow < Gosu::Window
 				@additive = false
 			end
 		end
+
+
 	end
 
 
@@ -208,7 +218,7 @@ class GameWindow < Gosu::Window
 			index += 1
 		end
 		@font.draw("additive rendering: " + @additive.to_s, 0, y, 10)
-		@font.draw("use mouse wheel to select attributes to change. use left and right arrow keys to change the values. Use space to clear the view", 0, 700, 10)
+		@font.draw("use up and down to select attributes to change. use left and right arrow keys to change the values. Use space to clear the view", 0, 700, 10)
 		@font.draw("hold right click to place particle emitters with the chosen attributes. Press left click to toggle additive rendering", 0, 720, 10)
 		@font.draw("more features soon and a better gui", 0, 740, 10)
 
